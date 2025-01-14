@@ -2,331 +2,334 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自定义JSON生成器</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        
-        .nav {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
-        .nav button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .nav button.active {
-            background-color: #4cae4c;
-        }
-        
-        .nav button:hover {
-            background-color: #4cae4c;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        
-        input[type="text"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        button:hover {
-            background-color: #4cae4c;
-        }
-        
-        #output {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f4f4f4;
-            border-radius: 4px;
-            min-height: 100px;
-            word-wrap: break-word;
-        }
-        
-        pre {
-            white-space: pre-wrap;
-            /* 保持空格和换行 */
-            word-wrap: break-word;
-            /* 长单词换行 */
-        }
-        
-        code {
-            font-family: 'Courier New', Courier, monospace;
-            /* 等宽字体 */
-        }
-        /* 切换动画 */
-        
-        .slide-enter {
-            animation: slideIn 0.5s forwards;
-        }
-        
-        .slide-exit {
-            animation: slideOut 0.5s forwards;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-            }
-            to {
-                transform: translateX(100%);
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自定义JSON生成器</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .nav button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .nav button.active {
+      background-color: #4cae4c;
+    }
+
+    .nav button:hover {
+      background-color: #4cae4c;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #4cae4c;
+    }
+
+    #output {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f4f4f4;
+      border-radius: 4px;
+      min-height: 100px;
+      word-wrap: break-word;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      /* 保持空格和换行 */
+      word-wrap: break-word;
+      /* 长单词换行 */
+    }
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      /* 等宽字体 */
+    }
+
+    /* 切换动画 */
+
+    .slide-enter {
+      animation: slideIn 0.5s forwards;
+    }
+
+    .slide-exit {
+      animation: slideOut 0.5s forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(100%);
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>JSON索引生成器</h1>
-        <div class="nav">
-            <button class="active" onclick="switchMode('tutorial')">教程</button>
-            <button onclick="switchMode('software')">软件</button>
-        </div>
-        <div id="tutorial" class="slide">
-            <!-- 教程模式的输入字段 -->
-            <div class="input-group">
-                <label for="title">标题：</label>
-                <input type="text" id="title" placeholder="输入标题">
-            </div>
-            <div class="input-group">
-                <label for="summary">简介/摘要：</label>
-                <input type="text" id="summary" placeholder="输入简介/摘要（正文前一百字）">
-            </div>
-            <div class="input-group">
-                <label for="author">作者名：</label>
-                <input type="text" id="author" placeholder="输入作者名">
-            </div>
-            <div class="input-group">
-                <label for="searchable">关键词：</label>
-                <input type="text" id="searchable" placeholder="输入可被搜索的关键词/用空格隔开">
-            </div>
-            <div class="input-group">
-                <label for="version">版本：</label>
-                <input type="text" id="version" placeholder="输入使用的am版本">
-            </div>
-        </div>
-        <div id="software" class="slide" style="display: none;">
-            <div class="input-group">
-                <label for="softwareTitle">软件名：</label>
-                <input type="text" id="softwareTitle" placeholder="输入软件名">
-            </div>
-            <div class="input-group">
-                <label for="softwareSummary">描述：</label>
-                <input type="text" id="softwareSummary" placeholder="输入描述">
-            </div>
-            <div class="input-group">
-                <label for="softwareKeywords">关键词：</label>
-                <input type="text" id="softwareKeywords" placeholder="输入可被搜索的关键词/用空格隔开">
-            </div>
-            <div class="input-group">
-                <label>链接类型：</label>
-                <select id="linkType" onchange="toggleLinkType()">
-        <option value="lanzou">单文件蓝奏云</option>
-        <option value="other">其他</option>
-      </select>
-            </div>
-            <div id="lanzouGroup" class="link-group">
-                <div class="input-group">
-                    <label for="lanzouUrl">单文件蓝奏云链接：</label>
-                    <input type="text" id="lanzouUrl" placeholder="输入蓝奏云链接">
-                </div>
-                <div class="input-group">
-                    <label for="lanzouPwd">密码：</label>
-                    <input type="text" id="lanzouPwd" placeholder="输入密码/没有可留空">
-                </div>
-            </div>
-            <div id="otherGroup" class="link-group" style="display: none;">
-                <div class="input-group">
-                    <label for="otherUrl">链接：</label>
-                    <input type="text" id="otherUrl" placeholder="输入链接">
-                </div>
-                <div class="input-group">
-                    <label for="otherPwd">密码：</label>
-                    <input type="text" id="otherPwd" placeholder="输入密码">
-                </div>
-            </div>
-            <div class="input-group">
-                <label for="softwareVersion">版本：</label>
-                <input type="text" id="softwareVersion" placeholder="输入版本号">
-            </div>
-        </div>
-        <button onclick="generateJson()">生成JSON</button>
-        <button onclick="copyToClipboard()">复制结果</button>
-        <pre><code id="output"></code></pre>
+  <div class="container">
+    <h1>JSON索引生成器</h1>
+    <div class="nav">
+      <button class="active" onclick="switchMode('tutorial')">教程</button>
+      <button onclick="switchMode('software')">软件</button>
     </div>
-    <script>
-        var currentMode = 'tutorial';
+    <div id="tutorial" class="slide">
+      <!-- 教程模式的输入字段 -->
+      <div class="input-group">
+        <label for="title">标题：</label>
+        <input type="text" id="title" placeholder="输入标题">
+      </div>
+      <div class="input-group">
+        <label for="summary">简介/摘要：</label>
+        <input type="text" id="summary" placeholder="输入简介/摘要（正文前一百字）">
+      </div>
+      <div class="input-group">
+        <label for="author">作者名：</label>
+        <input type="text" id="author" placeholder="输入作者名">
+      </div>
+      <div class="input-group">
+        <label for="searchable">关键词：</label>
+        <input type="text" id="searchable" placeholder="输入可被搜索的关键词/用空格隔开">
+      </div>
+      <div class="input-group">
+        <label for="version">版本：</label>
+        <input type="text" id="version" placeholder="输入使用的am版本">
+      </div>
+    </div>
+    <div id="software" class="slide" style="display: none;">
+      <div class="input-group">
+        <label for="softwareTitle">软件名：</label>
+        <input type="text" id="softwareTitle" placeholder="输入软件名">
+      </div>
+      <div class="input-group">
+        <label for="softwareSummary">描述：</label>
+        <input type="text" id="softwareSummary" placeholder="输入描述">
+      </div>
+      <div class="input-group">
+        <label for="softwareKeywords">关键词：</label>
+        <input type="text" id="softwareKeywords" placeholder="输入可被搜索的关键词/用空格隔开">
+      </div>
+      <div class="input-group">
+        <label>链接类型：</label>
+        <select id="linkType" onchange="toggleLinkType()">
+          <option value="lanzou">单文件蓝奏云</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      <div id="lanzouGroup" class="link-group">
+        <div class="input-group">
+          <label for="lanzouUrl">单文件蓝奏云链接：</label>
+          <input type="text" id="lanzouUrl" placeholder="输入蓝奏云链接">
+        </div>
+        <div class="input-group">
+          <label for="lanzouPwd">密码：</label>
+          <input type="text" id="lanzouPwd" placeholder="输入密码/没有可留空">
+        </div>
+      </div>
+      <div id="otherGroup" class="link-group" style="display: none;">
+        <div class="input-group">
+          <label for="otherUrl">链接：</label>
+          <input type="text" id="otherUrl" placeholder="输入链接">
+        </div>
+        <div class="input-group">
+          <label for="otherPwd">密码：</label>
+          <input type="text" id="otherPwd" placeholder="输入密码">
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="softwareVersion">版本：</label>
+        <input type="text" id="softwareVersion" placeholder="输入版本号">
+      </div>
+    </div>
+    <button onclick="generateJson()">生成JSON</button>
+    <button onclick="copyToClipboard()">复制结果</button>
+    <pre><code id="output"></code></pre>
+  </div>
+  <script>
+    var currentMode = 'tutorial';
 
-        function switchMode(mode) {
-            var current = document.getElementById(currentMode);
-            var next = document.getElementById(mode);
-            if (current) {
-                current.classList.add('slide-exit');
-                current.classList.remove('slide-enter');
-                setTimeout(() => {
-                    current.style.display = 'none';
-                }, 500);
-            }
-            if (next) {
-                next.style.display = 'block';
-                next.classList.add('slide-enter');
-                next.classList.remove('slide-exit');
-                setTimeout(() => {
-                    next.classList.remove('slide-enter');
-                }, 500);
-            }
-            document.querySelector('.nav button.active').classList.remove('active');
-            document.querySelector('.nav button[onclick="switchMode(\'' + mode + '\')"]').classList.add('active');
-            currentMode = mode;
-        }
+    function switchMode(mode) {
+      var current = document.getElementById(currentMode);
+      var next = document.getElementById(mode);
+      if (current) {
+        current.classList.add('slide-exit');
+        current.classList.remove('slide-enter');
+        setTimeout(() => {
+          current.style.display = 'none';
+        }, 500);
+      }
+      if (next) {
+        next.style.display = 'block';
+        next.classList.add('slide-enter');
+        next.classList.remove('slide-exit');
+        setTimeout(() => {
+          next.classList.remove('slide-enter');
+        }, 500);
+      }
+      document.querySelector('.nav button.active').classList.remove('active');
+      document.querySelector('.nav button[onclick="switchMode(\'' + mode + '\')"]').classList.add('active');
+      currentMode = mode;
+    }
 
-        function toggleLinkType() {
-            var linkType = document.getElementById('linkType').value;
-            if (linkType === 'lanzou') {
-                document.getElementById('lanzouGroup').style.display = 'block';
-                document.getElementById('otherGroup').style.display = 'none';
-            } else {
-                document.getElementById('lanzouGroup').style.display = 'none';
-                document.getElementById('otherGroup').style.display = 'block';
-            }
-        }
+    function toggleLinkType() {
+      var linkType = document.getElementById('linkType').value;
+      if (linkType === 'lanzou') {
+        document.getElementById('lanzouGroup').style.display = 'block';
+        document.getElementById('otherGroup').style.display = 'none';
+      } else {
+        document.getElementById('lanzouGroup').style.display = 'none';
+        document.getElementById('otherGroup').style.display = 'block';
+      }
+    }
 
-        function generateJson() {
-            var result = {};
-            if (currentMode === 'tutorial') {
-                var title = document.getElementById('title').value.trim();
-                var summary = document.getElementById('summary').value.trim();
-                var author = document.getElementById('author').value.trim();
-                var searchable = document.getElementById('searchable').value.trim();
-                var version = document.getElementById('version').value.trim();
-                var href = 'tutorial/' + title.replace(/\s+/g, '_') + '_' + author.replace(/\s+/g, '_') + '.html';
-                result = {
-                    "title": title,
-                    "summary": summary,
-                    "href": href,
-                    "searchable": searchable,
-                    "version": version
-                };
-            } else if (currentMode === 'software') {
-                var softwareTitle = document.getElementById('softwareTitle').value.trim();
-                var softwareSummary = document.getElementById('softwareSummary').value.trim();
-                var softwareKeywords = document.getElementById('softwareKeywords').value.trim();
-                var softwareVersion = document.getElementById('softwareVersion').value.trim();
-                var linkType = document.getElementById('linkType').value;
-                var lanzouUrl = document.getElementById('lanzouUrl').value.trim();
-                var lanzouPwd = document.getElementById('lanzouPwd').value.trim();
-                var otherUrl = document.getElementById('otherUrl').value.trim();
-                var otherPwd = document.getElementById('otherPwd').value.trim();
-                if (linkType === 'lanzou') {
-                    var href = 'http://api.mmp.cc/api/lanzou?type=down&url=' + lanzouUrl;
-                    if (lanzouPwd) {
-                        href += '&pwd=' + lanzouPwd;
-                    }
-                    result = {
-                        "title": softwareTitle,
-                        "summary": softwareSummary,
-                        "href": href,
-                        "searchable": softwareKeywords,
-                        "version": softwareVersion
-                    };
-                } else {
-                    var href = otherUrl;
-                    if (otherPwd) {
-                        softwareSummary = '密码：' + otherPwd + '，' + softwareSummary;
-                    }
-                    result = {
-                        "title": softwareTitle,
-                        "summary": softwareSummary,
-                        "href": href,
-                        "searchable": softwareKeywords,
-                        "version": softwareVersion
-                    };
-                }
-            }
-            var formattedJson = JSON.stringify(result, null, 2);
-            document.getElementById('output').innerHTML = '<pre><code>' + formattedJson + '</code></pre>';
+    function generateJson() {
+      var result = {};
+      if (currentMode === 'tutorial') {
+        var title = document.getElementById('title').value.trim();
+        var summary = document.getElementById('summary').value.trim();
+        var author = document.getElementById('author').value.trim();
+        var searchable = document.getElementById('searchable').value.trim();
+        var version = document.getElementById('version').value.trim();
+        var href = 'tutorial/' + title.replace(/\s+/g, '_') + '_' + author.replace(/\s+/g, '_') + '.html';
+        result = {
+          "title": title,
+          "summary": summary,
+          "href": href,
+          "searchable": searchable,
+          "version": version
+        };
+      } else if (currentMode === 'software') {
+        var softwareTitle = document.getElementById('softwareTitle').value.trim();
+        var softwareSummary = document.getElementById('softwareSummary').value.trim();
+        var softwareKeywords = document.getElementById('softwareKeywords').value.trim();
+        var softwareVersion = document.getElementById('softwareVersion').value.trim();
+        var linkType = document.getElementById('linkType').value;
+        var lanzouUrl = document.getElementById('lanzouUrl').value.trim();
+        var lanzouPwd = document.getElementById('lanzouPwd').value.trim();
+        var otherUrl = document.getElementById('otherUrl').value.trim();
+        var otherPwd = document.getElementById('otherPwd').value.trim();
+        if (linkType === 'lanzou') {
+          var href = 'http://api.mmp.cc/api/lanzou?type=down&url=' + lanzouUrl;
+          if (lanzouPwd) {
+            href += '&pwd=' + lanzouPwd;
+          }
+          result = {
+            "title": softwareTitle,
+            "summary": softwareSummary,
+            "href": href,
+            "searchable": softwareKeywords,
+            "version": softwareVersion
+          };
+        } else {
+          var href = otherUrl;
+          if (otherPwd) {
+            softwareSummary = '密码：' + otherPwd + '，' + softwareSummary;
+          }
+          result = {
+            "title": softwareTitle,
+            "summary": softwareSummary,
+            "href": href,
+            "searchable": softwareKeywords,
+            "version": softwareVersion
+          };
         }
+      }
+      var formattedJson = JSON.stringify(result, null, 2);
+      document.getElementById('output').innerHTML = '<pre><code>' + formattedJson + '</code></pre>';
+    }
 
-        function copyToClipboard() {
-            var output = document.getElementById('output').querySelector('code');
-            var range = document.createRange();
-            range.selectNode(output);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            try {
-                var successful = document.execCommand('copy');
-                if (successful) {
-                    alert('结果已复制到剪贴板');
-                } else {
-                    alert('复制失败，请手动复制');
-                }
-            } catch (err) {
-                alert('无法复制，错误：' + err);
-            }
-            window.getSelection().removeAllRanges();
+    function copyToClipboard() {
+      var output = document.getElementById('output').querySelector('code');
+      var range = document.createRange();
+      range.selectNode(output);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          alert('结果已复制到剪贴板');
+        } else {
+          alert('复制失败，请手动复制');
         }
-    </script>
+      } catch (err) {
+        alert('无法复制，错误：' + err);
+      }
+      window.getSelection().removeAllRanges();
+    }
+  </script>
 </body>
 
 </html>
